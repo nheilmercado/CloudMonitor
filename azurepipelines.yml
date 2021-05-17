@@ -49,7 +49,7 @@ stages:
           inputs:
             PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
             WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
-            PowerBIPath: '$(System.DefaultWorkingDirectory)//**/CloudMonitor.pbix'
+            PowerBIPath: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
             Create: true
         - task: PowerBIActions@5
           displayName: 'Getting access to workspace'
@@ -84,7 +84,7 @@ stages:
           inputs:
             azureSubscription: '${{ parameters.ServiceConn }}'
             ScriptType: 'FilePath'
-            ScriptPath: 'BiPowershellNonEnv.ps1'
+            ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\BiPowershellNonEnv.ps1'
             ScriptArguments: '-Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
             azurePowerShellVersion: 'LatestVersion'
             pwsh: true
@@ -94,7 +94,7 @@ stages:
           inputs:
             azureSubscription: '${{ parameters.ServiceConn }}'
             ScriptType: 'FilePath'
-            ScriptPath: 'BiPowershell.ps1'
+            ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\BiPowershell.ps1'
             ScriptArguments: '-Environment $(BiEnvironment) -Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
             azurePowerShellVersion: 'LatestVersion'
             pwsh: true
