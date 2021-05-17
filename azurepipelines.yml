@@ -5,7 +5,7 @@ parameters:
 - name: ServiceConn
   displayName: ServiceConn
   type: string
-  default: PROD-connection-DD
+  default: PROD-Connection2
 - name: PowerBiServiceConn
   displayName: PowerBiServiceConn
   type: string
@@ -13,7 +13,7 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorDDev
+   - CloudMonitorDDProd
 
 
 stages:
