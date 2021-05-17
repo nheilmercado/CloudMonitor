@@ -1,0 +1,52 @@
+trigger:
+- dev
+
+parameters:
+- name: ServiceConn
+  displayName: ServiceConn
+  type: string
+  default: PROD-connection-DD
+- name: PowerBiServiceConn
+  displayName: PowerBiServiceConn
+  type: string
+  default: Power-bi conn
+- name: groupvariables
+  type: object
+  default:
+   - CloudMonitorDDev
+
+
+stages:
+
+- stage: 'DeployDB'
+  displayName: 'Deploy to SQL Database'
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - ${{ each group in parameters.groupvariables }}:
+      - job:
+        displayName: 'Deploy to SQL Database'
+        variables:
+        - group: Release for Foundation Function Apps ${{ group }}
+        steps:
+        - task: AzurePowerShell@5
+          inputs:
+            azureSubscription: '${{ parameters.ServiceConn }}'
+            ScriptType: 'InlineScript'       
+            Inline: |
+              $Context = Get-AzContext
+              Set-AzKeyVaultAccessPolicy -VaultName $(resourceGroupLowerCase)-KV -ServicePrincipalName $Context.Account.Id -PermissionsToSecrets Get,List,Set
+            azurePowerShellVersion: 'LatestVersion'
+        - task: AzureKeyVault@1
+          displayName: 'Download Keyvault'
+          inputs:
+            azureSubscription: '${{ parameters.ServiceConn }}'
+            KeyVaultName: '$(resourceGroupLowerCase)-KV'
+            SecretsFilter: '*'
+            RunAsPreJob: false
+        - task: PowerBIActions@5
+          inputs:
+            PowerBIServiceEndpoint: 'Power-bi conn'
+            Action: 'DeleteReport'
+            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
+            ReportName: 'CloudMonitor'
