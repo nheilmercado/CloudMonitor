@@ -49,7 +49,7 @@ stages:
           inputs:
             PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
             WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
-            PowerBIPath: '$(System.DefaultWorkingDirectory)/Reporting/CloudMonitor.pbix'
+            PowerBIPath: '$(System.DefaultWorkingDirectory)\Reporting\CloudMonitor.pbix'
             Create: true
         - task: PowerBIActions@5
           displayName: 'Getting access to workspace'
