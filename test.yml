@@ -64,6 +64,7 @@ stages:
           inputs:
             filePath: '$(System.DefaultWorkingDirectory)\Refresh Script\BiPowershell.ps1'
             arguments: '-Environment $(BiEnvironment) -Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
+            pwsh: true
         - task: AzurePowerShell@5
           displayName: 'Update credentials'
           inputs:
