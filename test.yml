@@ -51,41 +51,6 @@ stages:
             KeyVaultName: '$(resourceGroupLowerCase)-KV'
             SecretsFilter: '*'
             RunAsPreJob: false
-        - task: PowerBIActions@5
-          displayName: 'Create workspace'
-          inputs:
-            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
-            PowerBIPath: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
-            Create: true
-        - task: PowerBIActions@5
-          displayName: 'Getting access to workspace'
-          inputs:
-            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
-            Action: 'AddUsers'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
-            Users: '$(WorkspaceUser)'
-            Permission: '$(WorkSpaceAccessLevel)'
-        - task: PowerBIActions@5
-          displayName: 'Take Ownership'
-          inputs:
-            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
-            Action: 'TakeOwnership'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
-            UpdateAll: true
-        - task: PowerBIActions@5
-          displayName: 'Update connection'
-          inputs:
-            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
-            Action: 'UpdateDatasource'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
-            UpdateAll: true
-            DatasetName: 'CloudMonitor-Data-Driven-V3'
-            DatasourceType: 'Sql'
-            OldServer: 'cloudmonitor-dd-dev-dbserver.database.windows.net'
-            NewServer: '$(resourceGroup)-dbserver.database.windows.net'
-            OldDatabase: 'cloudmonitor-dd-dev-db'
-            NewDatabase: '$(resourceGroup)-db'
         - task: AzurePowerShell@5
           displayName: 'Update Credential for non env'
           inputs:
@@ -94,7 +59,6 @@ stages:
             ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\BiPowershellNonEnv.ps1'
             ScriptArguments: '-Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
             azurePowerShellVersion: 'LatestVersion'
-            pwsh: true
           condition: eq(variables.Environment, '')
         - task: AzurePowerShell@5
           displayName: 'Update credentials'
@@ -104,6 +68,5 @@ stages:
             ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\BiPowershell.ps1'
             ScriptArguments: '-Environment $(BiEnvironment) -Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
             azurePowerShellVersion: 'LatestVersion'
-            pwsh: true
           condition: ne(variables.Environment, '')
 
