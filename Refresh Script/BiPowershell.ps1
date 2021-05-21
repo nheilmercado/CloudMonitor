@@ -26,16 +26,22 @@ Write-Host "Workspace: $($workspaceName)"
 #Write-Host "user: $($username)"
 #Write-Host "password: $($password)"
 
+Write-Host "29"
 $applicationId = $PowerBiClientId
 
+Write-Host "30"
 $TenantId = $tenantId
 
+Write-Host "31"
 $clientsec =  ConvertTo-SecureString -String $PowerBiClientSecretKey -AsPlainText -Force
 
+Write-Host "32"
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $applicationId, $clientsec
 
+Write-Host "33"
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId $TenantId
 
+Write-Host "34"
 $workspace = Get-PowerBIWorkspace -Name $workspaceName
 Write-Host "Got workspace"
 
