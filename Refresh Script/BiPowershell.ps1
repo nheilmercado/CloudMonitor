@@ -15,8 +15,6 @@ Import-Module MicrosoftPowerBIMgmt
 Install-Module -Name newtonsoft.json -Force
 Import-Module newtonsoft.json
 
-Write-Host "VaultName: $($vaultname)"
-
 $password = Get-AzKeyVaultSecret -VaultName $vaultname -Name 'DBReadPassword' -AsPlainText
 $username = Get-AzKeyVaultSecret -VaultName $vaultname -Name 'DBReadUserName' -AsPlainText
 
