@@ -29,7 +29,7 @@ Write-Host "VaultName: $($password)"
 Write-Host "VaultName: $($username)"
 
 $workspaceName = "CloudMonitor - $($Customer) - $($Environment)"
-$reportName = "CloudMonitor-Data-Driven-V3"
+$reportName = "CloudMonitor"
 
 Write-Host "Workspace: $($workspaceName)"
 #Write-Host "report name: $($reportName)"
