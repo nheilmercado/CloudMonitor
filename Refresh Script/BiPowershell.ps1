@@ -38,12 +38,14 @@ $clientsec =  ConvertTo-SecureString -String $PowerBiClientSecretKey -AsPlainTex
 Write-Host "32"
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $applicationId, $clientsec
 
-Write-Host "33"
+Write-Host "33	"
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId $TenantId
 
 Write-Host "34"
+Write-Host "Workspace: $($workspaceName)" 
 $workspace = Get-PowerBIWorkspace -Name $workspaceName
 Write-Host "Got workspace"
+Write-Host "48"
 
 $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName
 Write-Host "Got dataset"
