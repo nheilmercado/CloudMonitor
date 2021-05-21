@@ -5,7 +5,7 @@ parameters:
 - name: ServiceConn
   displayName: ServiceConn
   type: string
-  default: PROD-connection-dd
+  default: PROD-Connection2
 - name: PowerBiServiceConn
   displayName: PowerBiServiceConn
   type: string
@@ -13,7 +13,11 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorDDev
+   - CloudMonitorBandA
+   - CloudMonitorSentis
+   - CloudMonitorTranportNP
+   - CloudMonitorTranportProd
+   - CloudMonitorDDProd
 
 
 stages:
@@ -21,7 +25,7 @@ stages:
 - stage: 'DeployDB'
   displayName: 'Deploy to SQL Database'
   pool:
-      vmImage: 'windows-latest'
+    name: DevOpsBuildAgentProdWindowsPool
   jobs:
   - ${{ each group in parameters.groupvariables }}:
       - job:
