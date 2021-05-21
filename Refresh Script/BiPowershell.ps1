@@ -42,7 +42,8 @@ Write-Host "33	"
 Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId $TenantId
 
 Write-Host "34"
-Write-Host "Workspace: $($workspaceName)" 
+Write-Host "Workspace: $($workspaceName)"
+Get-PowerBIWorkspace -Name $workspaceName
 $workspace = Get-PowerBIWorkspace -Name $workspaceName
 Write-Host "Got workspace"
 Write-Host "48"
