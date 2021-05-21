@@ -16,11 +16,11 @@ Import-Module Az.KeyVault
 
 Write-Host "VaultName: $($vaultname)"
 
-$clientsec =  ConvertTo-SecureString -String ".k_wJonJ~qXh4DO7~rwi7ETeh1F3Fu~8zn" -AsPlainText -Force
-$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3f58cbe3-2f62-4548-b72a-914f14e54f98", $clientsec
-Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant c986e767-07af-4c9c-b2a1-08446a3c3e71
-Set-AzContext -Subscription "3b850c94-10ac-4e1b-8824-4d83a8002e5f"
-$Context = Get-AzContext
+#$clientsec =  ConvertTo-SecureString -String ".k_wJonJ~qXh4DO7~rwi7ETeh1F3Fu~8zn" -AsPlainText -Force
+#$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3f58cbe3-2f62-4548-b72a-914f14e54f98", $clientsec
+#Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant c986e767-07af-4c9c-b2a1-08446a3c3e71
+#Set-AzContext -Subscription "3b850c94-10ac-4e1b-8824-4d83a8002e5f"
+#$Context = Get-AzContext
 
 $password = Get-AzKeyVaultSecret -VaultName $vaultname -Name 'DBReadPassword' -AsPlainText
 $username = Get-AzKeyVaultSecret -VaultName $vaultname -Name 'DBReadUserName' -AsPlainText
