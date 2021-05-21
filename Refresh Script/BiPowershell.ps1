@@ -10,8 +10,9 @@
 #Install-Module AzureRm  -Force -AllowClobber
 
 Import-Module MicrosoftPowerBIMgmt
-
 Import-Module newtonsoft.json
+Import-Module Az.Accounts
+Import-Module Az.KeyVault
 
 Write-Host "VaultName: $($vaultname)"
 
