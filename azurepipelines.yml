@@ -25,7 +25,7 @@ stages:
 - stage: 'DeployDB'
   displayName: 'Deploy to SQL Database'
   pool:
-      vmImage: 'windows-latest'
+    name: DevOpsBuildAgentProdWindowsPool
   jobs:
   - ${{ each group in parameters.groupvariables }}:
       - job:
