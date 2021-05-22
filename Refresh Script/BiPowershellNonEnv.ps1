@@ -7,7 +7,7 @@
 )
 
 $workspaceName = "CloudMonitor - $($Customer) "
-$reportName = "CloudMonitor-Data-Driven-V3"
+$reportName = "CloudMonitor"
 
 $workspaceName
 $reportName
