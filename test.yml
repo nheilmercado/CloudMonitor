@@ -30,21 +30,27 @@ stages:
         - name: sdkVersion
           value: initialValue 
         steps:
-        - task: AzurePowerShell@5
-          displayName: 'Update credentials'
-          inputs:
-            azureSubscription: '${{ parameters.ServiceConn }}'
-            ScriptType: 'InlineScript'
-            Inline: |
-              $version1 = '7638c835-dbd4-49e4-ad77-3f890758f7f5'
-              
-              Write-Host "##vso[task.setvariable variable=sdkVersion]$version1" 
-              
-              Write-Host "Setted variable"
-            azurePowerShellVersion: 'LatestVersion'
-            pwsh: true
-        - task: CmdLine@2
-          inputs:
-            script: |
-              echo ${{ variables.sdkVersion }}
-              echo Hello world
+        
+            - powershell: echo "##vso[task.setvariable variable=myOutputVar;isOutput=true]this is the value"
+            name: setvarStep
+            - script: echo $(setvarStep.myOutputVar)
+            name: echovar
+    
+            - task: AzurePowerShell@5
+              name: Updatecredentials
+              inputs:
+                azureSubscription: '${{ parameters.ServiceConn }}'
+                ScriptType: 'InlineScript'
+                Inline: |
+                  $version1 = '7638c835-dbd4-49e4-ad77-3f890758f7f5'
+                  
+                  Write-Host "##vso[task.setvariable variable=sdkVersion;isOutput=true]$version1" 
+                  
+                  Write-Host "Setted variable"
+                azurePowerShellVersion: 'LatestVersion'
+                pwsh: true
+            - task: CmdLine@2
+              inputs:
+                script: |
+                  echo $(Updatecredentials.sdkVersion)
+                  echo Hello world
