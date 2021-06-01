@@ -43,6 +43,5 @@ stages:
         - task: CmdLine@2
           inputs:
             script: |
-              echo $sdkVersion
-              
+              echo ${{ variables.sdkVersion }}
               echo Hello world
