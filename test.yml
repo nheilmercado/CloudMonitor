@@ -42,7 +42,7 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
-                  Write-Host "$env:sdkVersion"
+                  Write-Host "$env:sdkVersion $env:PowerBiClientId $env:PowerBiClientSecretKey"
                   
                   $applicationId = $env:PowerBiClientId
 
