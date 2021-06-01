@@ -1,0 +1,42 @@
+trigger:
+- RK-PowerBi-Deployment
+
+parameters:
+- name: ServiceConn
+  displayName: ServiceConn
+  type: string
+  default: PROD-Connection2
+- name: PowerBiServiceConn
+  displayName: PowerBiServiceConn
+  type: string
+  default: Power-bi conn
+- name: groupvariables
+  type: object
+  default:
+   - CloudMonitorSentis
+   
+
+stages:
+
+- stage: 'DeployDB'
+  displayName: 'Deploy to SQL Database'
+  pool:
+    name: DevOpsBuildAgentProdWindowsPool
+  jobs:
+  - ${{ each group in parameters.groupvariables }}:
+      - job:
+        displayName: 'Deploy to SQL Database'
+        variables:
+        - group: Release for Foundation Function Apps ${{ group }}
+        steps:
+        
+        
+        - task: AzurePowerShell@5
+          displayName: 'Update credentials'
+          inputs:
+            azureSubscription: '${{ parameters.ServiceConn }}'
+            ScriptType: 'FilePath'
+            ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\test.ps1'
+            ScriptArguments: '-Environment $(BiEnvironment) -Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
+            azurePowerShellVersion: 'LatestVersion'
+            pwsh: true
