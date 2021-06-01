@@ -28,7 +28,11 @@ stages:
         displayName: 'Deploy to SQL Database'
         variables:
         - name: sdkVersion
-          value: initialValue 
+          value: initialValue
+        - name: BiId
+          value: ${{ variables.PowerBiClientId }}
+        - name: BiKey
+          value: ${{ variables.PowerBiClientSecretKey }}
         steps:
         
             - powershell: echo "##vso[task.setvariable variable=myOutputVar;isOutput=true]this is the value"
@@ -42,7 +46,7 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
-                  Write-Host "$env:sdkVersion $env:PowerBiClientId $env:PowerBiClientSecretKey"
+                  Write-Host "$env:sdkVersion $env:BiId $env:BiKey"
                   
                   $applicationId = $env:PowerBiClientId
 
