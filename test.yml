@@ -42,6 +42,8 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
+                  Write-Host "$env:sdkVersion"
+                    
                   $version1 = '7638c835-dbd4-49e4-ad77-3f890758f7f5'
                   
                   Write-Host "##vso[task.setvariable variable=sdkVersion;isOutput=true]$version1" 
