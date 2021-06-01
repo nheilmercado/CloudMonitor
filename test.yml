@@ -32,9 +32,9 @@ stages:
         steps:
         
             - powershell: echo "##vso[task.setvariable variable=myOutputVar;isOutput=true]this is the value"
-            name: setvarStep
+              name: setvarStep
             - script: echo $(setvarStep.myOutputVar)
-            name: echovar
+              name: echovar
     
             - task: AzurePowerShell@5
               name: Updatecredentials
