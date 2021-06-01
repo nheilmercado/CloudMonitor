@@ -14,7 +14,7 @@ parameters:
   type: object
   default:
    - CloudMonitorSentis
-   
+
 
 stages:
 
@@ -27,7 +27,8 @@ stages:
       - job:
         displayName: 'Deploy to SQL Database'
         variables:
-        - group: Release for Foundation Function Apps ${{ group }}
+        - name: sdkVersion
+          value: initialValue 
         steps:
         
         
