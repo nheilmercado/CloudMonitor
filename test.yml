@@ -46,7 +46,7 @@ stages:
                   
                   $applicationId = $env:PowerBiClientId
 
-                  $TenantId = $env:TENANT-ID-DD
+                  $TenantId = $env:TENANTIDDD
 
                   $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
 
