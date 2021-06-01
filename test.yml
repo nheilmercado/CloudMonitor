@@ -43,6 +43,16 @@ stages:
                 ScriptType: 'InlineScript'
                 Inline: |
                   Write-Host "$env:sdkVersion"
+                  
+                  $applicationId = $env:PowerBiClientId
+
+                  $TenantId = $env:TENANT-ID-DD
+
+                  $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
+
+                    $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $applicationId, $clientsec
+
+                    Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId $TenantId
                     
                   $version1 = '7638c835-dbd4-49e4-ad77-3f890758f7f5'
                   
