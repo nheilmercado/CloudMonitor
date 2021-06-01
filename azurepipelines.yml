@@ -14,10 +14,6 @@ parameters:
   type: object
   default:
    - CloudMonitorBandA
-   - CloudMonitorSentis
-   - CloudMonitorTranportNP
-   - CloudMonitorTranportProd
-   - CloudMonitorDDProd
 
 
 stages:
@@ -52,7 +48,7 @@ stages:
           displayName: 'Create workspace'
           inputs:
             PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
             PowerBIPath: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
             Create: true
         - task: PowerBIActions@5
@@ -60,7 +56,7 @@ stages:
           inputs:
             PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
             Action: 'AddUsers'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
             Users: '$(WorkspaceUser)'
             Permission: '$(WorkSpaceAccessLevel)'
         - task: PowerBIActions@5
@@ -68,14 +64,14 @@ stages:
           inputs:
             PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
             Action: 'TakeOwnership'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
             UpdateAll: true
         - task: PowerBIActions@5
           displayName: 'Update connection'
           inputs:
             PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
             Action: 'UpdateDatasource'
-            WorkspaceName: 'CloudMonitor - $(Customer) $(Environment)'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
             UpdateAll: true
             DatasetName: 'CloudMonitor-Data-Driven-V3'
             DatasourceType: 'Sql'
