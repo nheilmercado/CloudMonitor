@@ -37,7 +37,7 @@ stages:
             azureSubscription: '${{ parameters.ServiceConn }}'
             ScriptType: 'FilePath'
             ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\test.ps1'
-            ScriptArguments: '-Environment $(BiEnvironment) -Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
+            ScriptArguments: ''
             azurePowerShellVersion: 'LatestVersion'
             pwsh: true
         - task: CmdLine@2
