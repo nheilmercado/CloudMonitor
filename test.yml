@@ -77,7 +77,7 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
-                   $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
+                  $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
 
                   $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
 
