@@ -1,5 +1,5 @@
 trigger:
-- RK-PowerBi-Deployment
+- dev
 
 parameters:
 - name: ServiceConn
@@ -13,7 +13,7 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorSentis
+   - CloudMonitorBandA
 
 
 stages:
@@ -27,48 +27,75 @@ stages:
       - job:
         displayName: 'Deploy to SQL Database'
         variables:
-        - name: sdkVersion
-          value: initialValue
-        - name: BiId
-          value: ${{ variables.PowerBiClientId }}
-        - name: BiKey
-          value: ${{ variables.PowerBiClientSecretKey }}
+        - group: Release for Foundation Function Apps ${{ group }}
         steps:
-        
-            - powershell: echo "##vso[task.setvariable variable=myOutputVar;isOutput=true]this is the value"
-              name: setvarStep
-            - script: |
-                echo $(setvarStep.myOutputVar)
-                echo $env:BiId
-              name: echovar
-    
-            - task: AzurePowerShell@5
-              name: Updatecredentials
-              inputs:
-                azureSubscription: '${{ parameters.ServiceConn }}'
-                ScriptType: 'InlineScript'
-                Inline: |
-                  Write-Host "$env:sdkVersion $env:BiId $env:BiKey"
-                  
-                  $applicationId = $env:PowerBiClientId
-
-                  $TenantId = $env:TENANTIDDD
-
-                  $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
-
-                    $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $applicationId, $clientsec
-
-                    Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId $TenantId
-                    
-                  $version1 = '7638c835-dbd4-49e4-ad77-3f890758f7f5'
-                  
-                  Write-Host "##vso[task.setvariable variable=sdkVersion;isOutput=true]$version1" 
-                  
-                  Write-Host "Setted variable"
-                azurePowerShellVersion: 'LatestVersion'
-                pwsh: true
-            - task: CmdLine@2
-              inputs:
-                script: |
-                  echo $(Updatecredentials.sdkVersion)
-                  echo Hello world
+        - task: AzurePowerShell@5
+          inputs:
+            azureSubscription: '${{ parameters.ServiceConn }}'
+            ScriptType: 'InlineScript'       
+            Inline: |
+              $Context = Get-AzContext
+              Set-AzKeyVaultAccessPolicy -VaultName $(resourceGroupLowerCase)-KV -ServicePrincipalName $Context.Account.Id -PermissionsToSecrets Get,List,Set
+            azurePowerShellVersion: 'LatestVersion'
+        - task: AzureKeyVault@1
+          displayName: 'Download Keyvault'
+          inputs:
+            azureSubscription: '${{ parameters.ServiceConn }}'
+            KeyVaultName: '$(resourceGroupLowerCase)-KV'
+            SecretsFilter: '*'
+            RunAsPreJob: false
+        - task: PowerBIActions@5
+          displayName: 'Create workspace'
+          inputs:
+            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
+            PowerBIPath: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
+            Create: true
+        - task: PowerBIActions@5
+          displayName: 'Getting access to workspace'
+          inputs:
+            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
+            Action: 'AddUsers'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
+            Users: '$(WorkspaceUser)'
+            Permission: '$(WorkSpaceAccessLevel)'
+        - task: PowerBIActions@5
+          displayName: 'Take Ownership'
+          inputs:
+            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
+            Action: 'TakeOwnership'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
+            UpdateAll: true
+        - task: PowerBIActions@5
+          displayName: 'Update connection'
+          inputs:
+            PowerBIServiceEndpoint: '${{ parameters.PowerBiServiceConn }}'
+            Action: 'UpdateDatasource'
+            WorkspaceName: 'CloudMonitor - $(Customer)$(Environment)'
+            UpdateAll: true
+            DatasetName: 'CloudMonitor-Data-Driven-V3'
+            DatasourceType: 'Sql'
+            OldServer: 'cloudmonitor-dd-dev-dbserver.database.windows.net'
+            NewServer: '$(resourceGroup)-dbserver.database.windows.net'
+            OldDatabase: 'cloudmonitor-dd-dev-db'
+            NewDatabase: '$(resourceGroup)-db'
+        - task: AzurePowerShell@5
+          displayName: 'Update Credential for non env'
+          inputs:
+            azureSubscription: '${{ parameters.ServiceConn }}'
+            ScriptType: 'FilePath'
+            ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\BiPowershellNonEnv.ps1'
+            ScriptArguments: '-Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
+            azurePowerShellVersion: 'LatestVersion'
+            pwsh: true
+          condition: eq(variables.Environment, '')
+        - task: AzurePowerShell@5
+          displayName: 'Update credentials'
+          inputs:
+            azureSubscription: '${{ parameters.ServiceConn }}'
+            ScriptType: 'FilePath'
+            ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\BiPowershell.ps1'
+            ScriptArguments: '-Environment $(BiEnvironment) -Customer $(Customer) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANT-ID-DD)'
+            azurePowerShellVersion: 'LatestVersion'
+            pwsh: true
+          condition: ne(variables.Environment, '')
