@@ -69,7 +69,7 @@ stages:
             - task: PowerBIImport@1
               inputs:
                 connection: 'PowerBi-refreshConn'
-                workspace: '$BiId'
+                workspace: '$(BiId)'
                 path: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
             - task: AzurePowerShell@5
               name: Updatecredentials2
