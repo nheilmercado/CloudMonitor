@@ -36,11 +36,7 @@ stages:
         
         steps:
             - task: PowerBIToolInstaller@1
-            - task: PowerBIImport@1
-              inputs:
-                connection: 'PowerBi-refreshConn'
-                workspace: '7638c835-dbd4-49e4-ad77-3f890758f7f5'
-                path: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
+            
             - task: AzurePowerShell@5
               name: Updatecredentials
               inputs:
@@ -65,20 +61,22 @@ stages:
                   Add-PowerBIWorkspaceUser -Id '7638c835-dbd4-49e4-ad77-3f890758f7f5' -UserEmailAddress rohith.korupalli@data-driven.com -AccessRight Admin
                   }
                     
-                  Write-Host "##vso[task.setvariable variable=deployActivity]"Example string""
                   write-Host "$env:PowerBiClientId"
-                  #Write-Host "##vso[task.setvariable variable=BiId]"$env:PowerBiClientId""
+                  Write-Host "##vso[task.setvariable variable=BiId]"$workspace.Id""
                   
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
-              
+             - task: PowerBIImport@1
+              inputs:
+                connection: 'PowerBi-refreshConn'
+                workspace: '$BiId'
+                path: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
             - task: AzurePowerShell@5
               name: Updatecredentials2
               inputs:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
-                   Write-Host "Deploy Activity: $(deployActivity)"
                    Write-Host "Variable : $(BiId)"
                   
                 azurePowerShellVersion: 'LatestVersion'
