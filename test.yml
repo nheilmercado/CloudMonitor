@@ -46,7 +46,7 @@ stages:
 
                   $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
 
-                  Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANT-ID-DD"
+                  Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANTIDDD"
                     
                   Write-Host "##vso[task.setvariable variable=deployActivity]"Example string""
                   write-Host "$env:PowerBiClientId"
