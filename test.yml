@@ -35,6 +35,7 @@ stages:
           value: ${{ variables.PowerBiClientSecretKey }}
         
         steps:
+            - task: PowerBIToolInstaller@1
             - task: PowerBIImport@1
               inputs:
                 connection: 'PowerBi-refreshConn'
