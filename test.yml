@@ -42,11 +42,11 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
-                    $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
+                  $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
 
-                    $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
+                  $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
 
-                    Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANT-ID-DD"
+                  Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANT-ID-DD"
                     
                   Write-Host "##vso[task.setvariable variable=deployActivity]"Example string""
                   write-Host "$env:PowerBiClientId"
