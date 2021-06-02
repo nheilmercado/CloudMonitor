@@ -75,39 +75,40 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
-                  $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
-                  $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
+                  $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force    
+                  $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec    
                   Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANTIDDD"
-
-                  $workspace = Get-PowerBIWorkspace -Filter "name eq 'Test'"
-                  $reportName = "CloudMonitor"
-                  $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName
-                  $report = Get-PowerBIReport -WorkspaceId $workspace.Id
-
-                  $patchBody = '{
-                    "updateDetails": [
-                        {
-                          "datasourceSelector": {
-                            "datasourceType": "Sql",
-                            "connectionDetails": {
-                              "server": "CloudMonitor-DD-Dev-dbserver.database.windows.net",
-                              "database": "CloudMonitor-DD-Dev-db"
-                            }
-                          },
-                          "connectionDetails": {
-                            "server": "cloudmonitor-dd-prod-dbserver.database.windows.net",
-                            "database": "cloudmonitor-dd-prod-db"
-                          }
-                        }
-                      ]
-                    }' | ConvertFrom-Json
-
-                  $patchBodyJson = ConvertTo-Json -InputObject $patchBody -Depth 6 -Compress
-                  $url = "groups/$($workspace.Id)/datasets/$($dataset.Id)/Default.UpdateDatasources"
-                  Invoke-PowerBIRestMethod -Method Post -Url $url -Body $patchBodyJson
-
-                  Write-Host "##vso[task.setvariable variable=DataSetId]"$dataset.Id""
                   
-              azurePowerShellVersion: 'LatestVersion'
-              pwsh: true
+                  $workspace = Get-PowerBIWorkspace -Filter "name eq 'Test'"    
+                  $reportName = "CloudMonitor"    
+                  $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName    
+                  $report = Get-PowerBIReport -WorkspaceId $workspace.Id
+                  
+                  $patchBody = '{    
+                    "updateDetails": [    
+                        {    
+                          "datasourceSelector": {    
+                            "datasourceType": "Sql",    
+                            "connectionDetails": {    
+                              "server": "CloudMonitor-DD-Dev-dbserver.database.windows.net",    
+                              "database": "CloudMonitor-DD-Dev-db"    
+                            }    
+                          },    
+                          "connectionDetails": {    
+                            "server": "cloudmonitor-dd-prod-dbserver.database.windows.net",    
+                            "database": "cloudmonitor-dd-prod-db"    
+                          }    
+                        }    
+                      ]    
+                    }' | ConvertFrom-Json
+                  
+                  $patchBodyJson = ConvertTo-Json -InputObject $patchBody -Depth 6 -Compress    
+                  $url = "groups/$($workspace.Id)/datasets/$($dataset.Id)/Default.UpdateDatasources"    
+                  Invoke-PowerBIRestMethod -Method Post -Url $url -Body $patchBodyJson
+                  
+                  Write-Host "##vso[task.setvariable variable=DataSetId]"$dataset.Id""
+                azurePowerShellVersion: 'LatestVersion'
+                pwsh: true
+                  
+              
             
