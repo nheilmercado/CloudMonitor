@@ -109,6 +109,3 @@ stages:
                   Write-Host "##vso[task.setvariable variable=DataSetId]"$dataset.Id""
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
-                  
-              
-            
