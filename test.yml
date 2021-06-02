@@ -47,10 +47,22 @@ stages:
                   $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
 
                   Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANTIDDD"
+
+                  $workspace = Get-PowerBIWorkspace -Filter "name eq 'Test'"
+
+                  if ($workspace -ne $null){
+                  $workspace_id = $workspace.Id
+                  Write-Host "##vso[task.setvariable variable=BiId]"$workspace.Id""
+                  Write-Host "Workspace: yes $($workspace_id)"
+                  }
+                  else{
+                  New-PowerBIWorkspace -Name 'Test'
+                  Add-PowerBIWorkspaceUser -Id '7638c835-dbd4-49e4-ad77-3f890758f7f5' -UserEmailAddress rohith.korupalli@data-driven.com -AccessRight Admin
+                  }
                     
                   Write-Host "##vso[task.setvariable variable=deployActivity]"Example string""
                   write-Host "$env:PowerBiClientId"
-                  Write-Host "##vso[task.setvariable variable=BiId]"$env:PowerBiClientId""
+                  #Write-Host "##vso[task.setvariable variable=BiId]"$env:PowerBiClientId""
                   
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
