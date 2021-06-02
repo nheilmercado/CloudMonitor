@@ -77,7 +77,18 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
-                   Write-Host "Variable : $(BiId)"
+                   $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
+
+                  $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
+
+                  Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANTIDDD"
+
+                  $workspace = Get-PowerBIWorkspace -Filter "name eq 'Test'"
+                  $reportName = "CloudMonitor"
+                  $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName
+                  
+                  Write-Host "##vso[task.setvariable variable=DataSetId]"$dataset.Id""
+                  
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
             - task: PowerBIDataRefreshSchedule@1
@@ -85,7 +96,7 @@ stages:
                 connection: 'PowerBi-refreshConn'
                 type: 'Dataset'
                 workspace: '$(BiId)'
-                name: 'CloudMonitor'
+                name: '$(DataSetId)'
                 enabled: 'Enabled'
                 days: '["Monday"]'
                 times: '[ "10:00", "14:00" ]'
