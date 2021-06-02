@@ -29,21 +29,12 @@ stages:
         variables:
         
         - group: Release for Foundation Function Apps ${{ group }}
-        - name: sdkVersion
-          value: initialValue
         - name: BiId
           value: ${{ variables.PowerBiClientId }}
         - name: BiKey
           value: ${{ variables.PowerBiClientSecretKey }}
         
         steps:
-        
-            - powershell: echo "##vso[task.setvariable variable=myOutputVar;isOutput=true]this is the value"
-              name: setvarStep
-            - script: |
-                echo $(setvarStep.myOutputVar)
-                echo $env:BiId
-              name: echovar
     
             - task: AzurePowerShell@5
               name: Updatecredentials
@@ -52,6 +43,7 @@ stages:
                 ScriptType: 'InlineScript'
                 Inline: |
                   Write-Host "##vso[task.setvariable variable=deployActivity]"Example string""
+                  writeHost "$env:PowerBiClientId"
                   
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
