@@ -78,7 +78,14 @@ stages:
                 ScriptType: 'InlineScript'
                 Inline: |
                    Write-Host "Variable : $(BiId)"
-                  
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
-            
+            - task: PowerBIDataRefreshSchedule@1
+              inputs:
+                connection: 'PowerBi-refreshConn'
+                type: 'Dataset'
+                workspace: '$(BiId)'
+                name: 'CloudMonitor'
+                enabled: 'Enabled'
+                days: '["Monday"]'
+                times: '[ "10:00", "14:00" ]'
