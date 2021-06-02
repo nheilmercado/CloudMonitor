@@ -37,7 +37,7 @@ stages:
         steps:
             - task: PowerBIImport@1
               inputs:
-                connection: '${{ parameters.PowerBiServiceConn }}'
+                connection: 'PowerBi-refreshConn'
                 workspace: '7638c835-dbd4-49e4-ad77-3f890758f7f5'
                 path: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
             - task: AzurePowerShell@5
