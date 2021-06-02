@@ -44,6 +44,7 @@ stages:
                 Inline: |
                   Write-Host "##vso[task.setvariable variable=deployActivity]"Example string""
                   write-Host "$env:PowerBiClientId"
+                  Write-Host "##vso[task.setvariable variable=BiId]"$env:PowerBiClientId""
                   
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
@@ -55,12 +56,7 @@ stages:
                 ScriptType: 'InlineScript'
                 Inline: |
                    Write-Host "Deploy Activity: $(deployActivity)"
+                   Write-Host "Variable : $(BiId)"
                   
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
-                
-            - task: CmdLine@2
-              inputs:
-                script: |
-                  echo $(Updatecredentials.sdkVersion)
-                  echo Hello world
