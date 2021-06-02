@@ -57,7 +57,7 @@ stages:
                 pwsh: true
               
             - task: AzurePowerShell@5
-              name: Updatecredentials
+              name: Updatecredentials2
               inputs:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
