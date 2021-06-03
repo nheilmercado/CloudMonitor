@@ -54,7 +54,7 @@ stages:
                   
                   $workspaceName = "CloudMonitor - $env:Customer"
                   
-                  if ($env:Environment -ne $null){
+                  if ($env:Environment -ne ''){
                   $workspaceName = "CloudMonitor - $env:Customer - $env:Environment"
                   }
                   Write-Host "Name : $workspaceName"
