@@ -70,7 +70,7 @@ stages:
                   Add-PowerBIWorkspaceUser -Id $NewWorkspace.Id -UserEmailAddress rohith.korupalli@data-driven.com -AccessRight Admin
                   }
                   
-                  New-PowerBIReport -Path '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix' -Name 'Report' -Workspace ( Get-PowerBIWorkspace -Name 'Test' ) -ConflictAction "Overwrite"
+                  New-PowerBIReport -Path '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix' -Name 'CloudMonitor' -Workspace ( Get-PowerBIWorkspace -Name $workspaceName ) -ConflictAction "Overwrite"
                     
                   $reportName = "CloudMonitor"    
                   $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName    
