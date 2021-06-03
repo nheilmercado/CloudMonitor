@@ -29,10 +29,6 @@ stages:
         variables:
         
         - group: Release for Foundation Function Apps ${{ group }}
-        - name: BiId
-          value: ${{ variables.PowerBiClientId }}
-        - name: BiKey
-          value: ${{ variables.PowerBiClientSecretKey }}
         
         steps:
             - task: PowerBIToolInstaller@1
@@ -58,29 +54,10 @@ stages:
                   New-PowerBIWorkspace -Name 'Test'
                   Add-PowerBIWorkspaceUser -Id '7638c835-dbd4-49e4-ad77-3f890758f7f5' -UserEmailAddress rohith.korupalli@data-driven.com -AccessRight Admin
                   }
+                  
+                  New-PowerBIReport -Path '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix' -Name 'Report' -Workspace ( Get-PowerBIWorkspace -Name 'Test' ) -ConflictAction "Overwrite"
                     
-                  write-Host "$env:PowerBiClientId"
-                  Write-Host "##vso[task.setvariable variable=BiId]"$workspace.Id""
-                  
-                azurePowerShellVersion: 'LatestVersion'
-                pwsh: true
-            - task: PowerBIImport@1
-              inputs:
-                connection: 'PowerBi-refreshConn'
-                workspace: '$(BiId)'
-                path: '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix'
-            - task: AzurePowerShell@5
-              name: Updatecredentials2
-              inputs:
-                azureSubscription: '${{ parameters.ServiceConn }}'
-                ScriptType: 'InlineScript'
-                Inline: |
-                  $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force    
-                  $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec    
-                  Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANTIDDD"
-                  
-                  $workspace = Get-PowerBIWorkspace -Filter "name eq 'Test'"    
-                  $reportName = "CloudMonitor"    
+                  $reportName = "Report"    
                   $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName    
                   $report = Get-PowerBIReport -WorkspaceId $workspace.Id
                   
@@ -102,10 +79,26 @@ stages:
                       ]    
                     }' | ConvertFrom-Json
                   
+                  Write-Host "#Takeover"
+                  Invoke-PowerBIRestMethod -Url "groups/$($workspace.id)/datasets/$($dataset.Id)/Default.TakeOver" -Method Post
+                  
                   $patchBodyJson = ConvertTo-Json -InputObject $patchBody -Depth 6 -Compress    
-                  $url = "groups/$($workspace.Id)/datasets/$($dataset.Id)/Default.UpdateDatasources"    
+                  $url = "groups/$($workspace.Id)/datasets/$($dataset.Id)/Default.UpdateDatasources"   
+                   Write-Host "#Update COnnection Strings"
                   Invoke-PowerBIRestMethod -Method Post -Url $url -Body $patchBodyJson
+
                   
                   Write-Host "##vso[task.setvariable variable=DataSetId]"$dataset.Id""
+                  Write-Host "##vso[task.setvariable variable=BiId]"$workspace.Id""
+                  
+                azurePowerShellVersion: 'LatestVersion'
+                pwsh: true
+            - task: AzurePowerShell@5
+              displayName: 'Update credentials'
+              inputs:
+                azureSubscription: '${{ parameters.ServiceConn }}'
+                ScriptType: 'FilePath'
+                ScriptPath: '$(System.DefaultWorkingDirectory)\Refresh Script\test.ps1'
+                ScriptArguments: '-BiWorspaceId $(BiId) -vaultname $(resourceGroupLowerCase)-KV -PowerBiClientId $(PowerBiClientId) -PowerBiClientSecretKey $(PowerBiClientSecretKey) -tenantId $(TENANTIDDD)'
                 azurePowerShellVersion: 'LatestVersion'
                 pwsh: true
