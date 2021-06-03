@@ -31,6 +31,13 @@ stages:
         - group: Release for Foundation Function Apps ${{ group }}
         
         steps:
+            - task: AzurePowerShell@5
+              inputs:
+                azureSubscription: '${{ parameters.ServiceConn }}'
+                ScriptType: 'InlineScript'       
+                Inline: |
+                  $Context = Get-AzContext
+                  Set-AzKeyVaultAccessPolicy -VaultName $(resourceGroupLowerCase)-KV -ServicePrincipalName $Context.Account.Id -PermissionsToSecrets Get,List,Set
             - task: PowerBIToolInstaller@1
             
             - task: AzurePowerShell@5
@@ -42,13 +49,19 @@ stages:
                   $clientsec =  ConvertTo-SecureString -String $env:PowerBiClientSecretKey -AsPlainText -Force
                   $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
                   Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANTIDDD"
-
-                  $workspace = Get-PowerBIWorkspace -Filter "name eq 'Test'"
+                  
+                  Write-Host "$($Environment)"
+                  
+                  $workspaceName = "CloudMonitor - $($Customer)"
+                  
+                  if ($Environment -ne ''){
+                  $workspaceName = "CloudMonitor - $($Customer) - $($Environment)"
+                  }
+                  
+                  $workspace = Get-PowerBIWorkspace -Name $workspaceName
 
                   if ($workspace -ne $null){
                   $workspace_id = $workspace.Id
-                  Write-Host "##vso[task.setvariable variable=BiId]"$workspace.Id""
-                  Write-Host "Workspace: yes $($workspace_id)"
                   }
                   else{
                   New-PowerBIWorkspace -Name 'Test'
@@ -57,7 +70,7 @@ stages:
                   
                   New-PowerBIReport -Path '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix' -Name 'Report' -Workspace ( Get-PowerBIWorkspace -Name 'Test' ) -ConflictAction "Overwrite"
                     
-                  $reportName = "Report"    
+                  $reportName = "CloudMonitor"    
                   $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName    
                   $report = Get-PowerBIReport -WorkspaceId $workspace.Id
                   
