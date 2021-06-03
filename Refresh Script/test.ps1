@@ -54,16 +54,11 @@ $patchBody = @{
 $patchBodyJson = ConvertTo-Json -InputObject $patchBody -Depth 6 -Compress
 
 $patchBodyJson
-Write-Host "groups/$($workspace.id)/datasets/$($dataset.Id)/Default.TakeOver"
-
-Invoke-PowerBIRestMethod -Url "groups/$($workspaceId)/datasets/$($dataset.Id)/Default.TakeOver" -Method Post
-
-
-$patchBodyJson
 Write-Host "$datasourePatchUrl"
 
-# Execute PATCH operation to set datasource credentials
+Write-Host "# Execute PATCH operation to set datasource credentials"
 Invoke-PowerBIRestMethod -Method Patch -Url $datasourePatchUrl -Body $patchBodyJson
+Write-Host "# Done Patching"
 
 Write-Host "Refreshing groups/$workspaceId/datasets/$datasetId/refreshes"
 $datasetRefreshUrl = "groups/$workspaceId/datasets/$datasetId/refreshes"
