@@ -13,7 +13,7 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorSentis
+   - CloudMonitorDDProd
 
 
 stages:
