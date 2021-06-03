@@ -58,9 +58,9 @@ stages:
                   $workspaceName = "CloudMonitor - $env:Customer - $env:Environment"
                   }
                   Write-Host "Name : $workspaceName"
-                  Get-PowerBIWorkspace -Name $workspaceName
-                  Write-Host "Name : $workspaceName"
+                  
                   $workspace = Get-PowerBIWorkspace -Name $workspaceName
+                  Write-Host "$workspace"
 
                   if ($workspace -ne $null){
                   $workspace_id = $workspace.Id
