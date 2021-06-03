@@ -53,8 +53,10 @@ $patchBody = @{
 
 $patchBodyJson = ConvertTo-Json -InputObject $patchBody -Depth 6 -Compress
 
+$patchBodyJson
+Write-Host "groups/$($workspace.id)/datasets/$($dataset.Id)/Default.TakeOver"
 
-Invoke-PowerBIRestMethod -Url "groups/$($workspace.id)/datasets/$($dataset.Id)/Default.TakeOver" -Method Post
+Invoke-PowerBIRestMethod -Url "groups/$($workspaceId)/datasets/$($dataset.Id)/Default.TakeOver" -Method Post
 
 
 $patchBodyJson
