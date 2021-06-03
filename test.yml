@@ -88,13 +88,13 @@ stages:
                             }    
                           },    
                           "connectionDetails": {    
-                            "server": "cloudmonitor-banda-dbserver.database.windows.net",    
-                            "database": "cloudmonitor-banda-db"    
+                            "server": "$env:resourceGroup-dbserver.database.windows.net",    
+                            "database": "$env:resourceGroup-db"    
                           }    
                         }    
                       ]    
                     }' | ConvertFrom-Json
-                  
+                  $patchBody
                   Write-Host "#Takeover"
                   Invoke-PowerBIRestMethod -Url "groups/$($workspace.id)/datasets/$($dataset.Id)/Default.TakeOver" -Method Post
                   
