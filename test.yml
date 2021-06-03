@@ -13,7 +13,7 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorSentis
+   - CloudMonitorBandA
 
 
 stages:
@@ -34,12 +34,11 @@ stages:
             - task: AzurePowerShell@5
               inputs:
                 azureSubscription: '${{ parameters.ServiceConn }}'
-                ScriptType: 'InlineScript'       
+                ScriptType: 'InlineScript'
                 Inline: |
-                  $Context = Get-AzContext
+                  $Context = Get-AzContext    
                   Set-AzKeyVaultAccessPolicy -VaultName $(resourceGroupLowerCase)-KV -ServicePrincipalName $Context.Account.Id -PermissionsToSecrets Get,List,Set
-            - task: PowerBIToolInstaller@1
-            
+                azurePowerShellVersion: 'LatestVersion'
             - task: AzurePowerShell@5
               name: GetWorkSpaceId
               inputs:
@@ -85,8 +84,8 @@ stages:
                             }    
                           },    
                           "connectionDetails": {    
-                            "server": "cloudmonitor-sentis-dbserver.database.windows.net",    
-                            "database": "cloudmonitor-sentis-db"    
+                            "server": "cloudmonitor-banda-dbserver.database.windows.net",    
+                            "database": "cloudmonitor-banda-db"    
                           }    
                         }    
                       ]    
