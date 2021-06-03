@@ -59,14 +59,15 @@ stages:
                   }
                   Write-Host "Name : $workspaceName"
                   Get-PowerBIWorkspace -Name $workspaceName
+                  Write-Host "Name : $workspaceName"
                   $workspace = Get-PowerBIWorkspace -Name $workspaceName
 
                   if ($workspace -ne $null){
                   $workspace_id = $workspace.Id
                   }
                   else{
-                  New-PowerBIWorkspace -Name '$workspaceName'
-                  Add-PowerBIWorkspaceUser -Id '7638c835-dbd4-49e4-ad77-3f890758f7f5' -UserEmailAddress rohith.korupalli@data-driven.com -AccessRight Admin
+                  $NewWorkspace = New-PowerBIWorkspace -Name $workspaceName
+                  Add-PowerBIWorkspaceUser -Id $NewWorkspace -UserEmailAddress rohith.korupalli@data-driven.com -AccessRight Admin
                   }
                   
                   New-PowerBIReport -Path '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix' -Name 'Report' -Workspace ( Get-PowerBIWorkspace -Name 'Test' ) -ConflictAction "Overwrite"
