@@ -76,24 +76,28 @@ stages:
                   $reportName = "CloudMonitor"    
                   $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName    
                   $report = Get-PowerBIReport -WorkspaceId $workspace.Id
+                  $resourcegroup = $env:resourceGroup
+                  $resourcegroup
+                  $servername = "$($resourcegroup)-dbserver.database.windows.net"
+                  $dbname = "$($resourcegroup)-db"
                   
-                  $patchBody = '{    
-                    "updateDetails": [    
+                  $patchBody = "{    
+                    ""updateDetails"": [    
                         {    
-                          "datasourceSelector": {    
-                            "datasourceType": "Sql",    
-                            "connectionDetails": {    
-                              "server": "CloudMonitor-DD-Dev-dbserver.database.windows.net",    
-                              "database": "CloudMonitor-DD-Dev-db"    
+                          ""datasourceSelector"": {    
+                            ""datasourceType"": ""Sql"",    
+                            ""connectionDetails"": {    
+                              ""server"": ""CloudMonitor-DD-Dev-dbserver.database.windows.net"",    
+                              ""database"": ""CloudMonitor-DD-Dev-db""    
                             }    
                           },    
-                          "connectionDetails": {    
-                            "server": "$env:resourceGroup-dbserver.database.windows.net",    
-                            "database": "$env:resourceGroup-db"    
+                          ""connectionDetails"": {    
+                            ""server"": ""$servername"",    
+                            ""database"": ""$dbname""    
                           }    
                         }    
                       ]    
-                    }' | ConvertFrom-Json
+                    }" | ConvertFrom-Json 
                   $patchBody
                   Write-Host "#Takeover"
                   Invoke-PowerBIRestMethod -Url "groups/$($workspace.id)/datasets/$($dataset.Id)/Default.TakeOver" -Method Post
