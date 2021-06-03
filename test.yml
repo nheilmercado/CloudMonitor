@@ -14,6 +14,7 @@ parameters:
   type: object
   default:
    - CloudMonitorBandA
+   - CloudMonitorSentis
 
 
 stages:
@@ -60,12 +61,9 @@ stages:
                   Write-Host "Name : $workspaceName"
                   
                   $workspace = Get-PowerBIWorkspace -Name $workspaceName
-                  Write-Host "$workspace"
 
                   if ($workspace -ne $null){
-                  Write-Host "Yes"
                   $workspace_id = $workspace.Id
-                  Write-Host "$workspace_id"
                   }
                   else{
                   $NewWorkspace = New-PowerBIWorkspace -Name $workspaceName
