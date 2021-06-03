@@ -1,5 +1,5 @@
 ﻿param (
-    $BiWorspaceId,
+    $BiWorkspaceId,
     $vaultname,
     $PowerBiClientId,
     $PowerBiClientSecretKey,
@@ -22,10 +22,10 @@ Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantI
 #Write-Host "Got workspace"
 
 
-$dataset = Get-PowerBIDataset -WorkspaceId $BiWorspaceId -Name "Report"
+$dataset = Get-PowerBIDataset -WorkspaceId $BiWorkspaceId -Name "Report"
 Write-Host "Got dataset"
 
-$workspaceId = $BiWorspaceId
+$workspaceId = $BiWorkspaceId
 $datasetId = $dataset.Id
 
 $datasource = Get-PowerBIDatasource -WorkspaceId $workspaceId -DatasetId $datasetId
