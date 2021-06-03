@@ -65,7 +65,7 @@ stages:
                   if ($workspace -ne $null){
                   Write-Host "Yes"
                   $workspace_id = $workspace.Id
-                  Write-Host "Yes"
+                  Write-Host "$workspace_id"
                   }
                   else{
                   $NewWorkspace = New-PowerBIWorkspace -Name $workspaceName
@@ -73,7 +73,8 @@ stages:
                   }
                   
                   New-PowerBIReport -Path '$(System.DefaultWorkingDirectory)\Power BI\CloudMonitor.pbix' -Name 'CloudMonitor' -Workspace ( Get-PowerBIWorkspace -Name $workspaceName ) -ConflictAction "Overwrite"
-                    
+                  Write-Host "Created Report"
+                  
                   $reportName = "CloudMonitor"    
                   $dataset = Get-PowerBIDataset -WorkspaceId $workspace.Id -Name $reportName    
                   $report = Get-PowerBIReport -WorkspaceId $workspace.Id
