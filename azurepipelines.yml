@@ -1,5 +1,5 @@
 trigger:
-- RK-PowerBi-Deployment
+- dev
 
 parameters:
 - name: ServiceConn
@@ -13,9 +13,11 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorSentis
-   - CloudMonitorBandA
    - CloudMonitorDDProd
+   - CloudMonitorSentis
+   - CloudMonitorBandA   
+   - CloudMonitorTranportNP
+   - CloudMonitorTranportProd
 
 
 stages:
