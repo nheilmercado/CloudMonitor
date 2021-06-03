@@ -49,13 +49,15 @@ stages:
                   $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:PowerBiClientId, $clientsec
                   Connect-PowerBIServiceAccount -ServicePrincipal -Credential $credential -TenantId "$env:TENANTIDDD"
                   
-                  Write-Host "$($Environment)"
+                  Write-Host "Connected"
+                  Write-Host "$($env:Environment)"
                   
-                  $workspaceName = "CloudMonitor - $($Customer)"
+                  $workspaceName = "CloudMonitor - $($env:Customer)"
                   
                   if ($Environment -ne ''){
                   $workspaceName = "CloudMonitor - $($Customer) - $($Environment)"
-                  }
+                  }9
+                  Write-Host "Name : $($workspaceName)"
                   
                   $workspace = Get-PowerBIWorkspace -Name $workspaceName
 
@@ -63,7 +65,7 @@ stages:
                   $workspace_id = $workspace.Id
                   }
                   else{
-                  New-PowerBIWorkspace -Name 'Test'
+                  New-PowerBIWorkspace -Name '$workspaceName'
                   Add-PowerBIWorkspaceUser -Id '7638c835-dbd4-49e4-ad77-3f890758f7f5' -UserEmailAddress rohith.korupalli@data-driven.com -AccessRight Admin
                   }
                   
