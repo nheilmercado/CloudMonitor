@@ -13,7 +13,7 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorDDProd
+   - CloudMonitorSentis
 
 
 stages:
@@ -72,8 +72,8 @@ stages:
                             }    
                           },    
                           "connectionDetails": {    
-                            "server": "cloudmonitor-dd-prod-dbserver.database.windows.net",    
-                            "database": "cloudmonitor-dd-prod-db"    
+                            "server": "cloudmonitor-sentis-dbserver.database.windows.net",    
+                            "database": "cloudmonitor-sentis-db"    
                           }    
                         }    
                       ]    
