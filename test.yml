@@ -19,8 +19,8 @@ parameters:
 
 stages:
 
-- stage: 'Start VM'
-  displayName: 'Check to start VM'
+- stage: 'StartVM'
+  displayName: 'ChecktostartVM'
   pool:
       vmImage: 'windows-latest'
   jobs:
