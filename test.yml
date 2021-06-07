@@ -28,11 +28,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Get-Module -ListAvailable
-          Install-module Az.compute
-          Install-module Az.Accounts
-          Import-Module -Name Az.compute
-          Import-Module -Name Az.Accounts
+          #Get-Module -ListAvailable
+          Import-Module -FullyQualifiedName 'C:\Windows\System32\WindowsPowerShell\v1.0\Modules\Az.Accounts'
+          Import-Module -FullyQualifiedName 'C:\Windows\System32\WindowsPowerShell\v1.0\Modules\Az.Compute'
           Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
           Clear-AzContext -Scope Process
           
