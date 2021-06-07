@@ -23,8 +23,9 @@ stages:
       vmImage: 'windows-latest'
   jobs:
   - job:
-    steps: 
     - group: DD Build Variables
+    steps: 
+    
     - task: AzurePowerShell@5
       inputs:
         azureSubscription: '${{ parameters.ServiceConn }}'
