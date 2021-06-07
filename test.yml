@@ -51,6 +51,7 @@ stages:
           Start-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM"
           }
         azurePowerShellVersion: 'LatestVersion'
+        
 - stage: 'DeployDB'
   displayName: 'Deploy to SQL Database'
   pool:
