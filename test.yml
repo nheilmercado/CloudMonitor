@@ -51,3 +51,23 @@ stages:
           Start-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM"
           }
         azurePowerShellVersion: 'LatestVersion'
+- stage: 'DeployDB'
+  displayName: 'Deploy to SQL Database'
+  pool:
+    name: DevOpsBuildAgentProdWindowsPool
+  jobs:        
+  - ${{ each group in parameters.groupvariables }}:
+      - job:
+        displayName: 'Deploy to SQL Database'
+        variables:       
+        - group: Release for Foundation Function Apps ${{ group }}
+        
+        steps:
+            - task: AzurePowerShell@5
+              inputs:
+                azureSubscription: '${{ parameters.ServiceConn }}'
+                ScriptType: 'InlineScript'
+                Inline: |
+                  $Context = Get-AzContext    
+                  Set-AzKeyVaultAccessPolicy -VaultName $(resourceGroupLowerCase)-KV -ServicePrincipalName $Context.Account.Id -PermissionsToSecrets Get,List,Set
+                azurePowerShellVersion: 'LatestVersion'
