@@ -24,47 +24,19 @@ stages:
   jobs:
   - job:
     steps: 
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          #Get-Module -ListAvailable
-          Import-Module -FullyQualifiedName 'C:\Windows\System32\WindowsPowerShell\v1.0\Modules\Az.Accounts'
-          Import-Module -FullyQualifiedName 'C:\Windows\System32\WindowsPowerShell\v1.0\Modules\Az.Compute'
-          Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
-          Clear-AzContext -Scope Process
-          
-          $clientsec =  ConvertTo-SecureString -String ".k_wJonJ~qXh4DO7~rwi7ETeh1F3Fu~8zn" -AsPlainText -Force
-          
-          $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3f58cbe3-2f62-4548-b72a-914f14e54f98", $clientsec
-          
-          Connect-AzAccount -ServicePrincipal -SubscriptionId "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -TenantId "c986e767-07af-4c9c-b2a1-08446a3c3e71" -Credential $credential
-          
-          set-AzContext -Subscription "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -Tenant "c986e767-07af-4c9c-b2a1-08446a3c3e71"
-          
-          $vmstatus = Get-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM" -Status
-          
-          if ($vmstatus.Statuses[1].Code -eq "PowerState/running")
-          {
-          Write-Host "Running"
-          }
-          else
-          {
-          Write-Host "Currently Stopped"
-          Start-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM"
-          }
+    - group: DD Build Variables
     - task: AzurePowerShell@5
       inputs:
         azureSubscription: '${{ parameters.ServiceConn }}'
         ScriptType: 'InlineScript'
         Inline: |
-          $clientsec =  ConvertTo-SecureString -String ".k_wJonJ~qXh4DO7~rwi7ETeh1F3Fu~8zn" -AsPlainText -Force
+          $clientsec =  ConvertTo-SecureString -String "$env:CLIENT_SECRET" -AsPlainText -Force
 
-          $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3f58cbe3-2f62-4548-b72a-914f14e54f98", $clientsec
+          $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$env:CLIENT_ID", $clientsec
 
-          Connect-AzAccount -ServicePrincipal -SubscriptionId "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -TenantId "c986e767-07af-4c9c-b2a1-08446a3c3e71" -Credential $credential
+          Connect-AzAccount -ServicePrincipal -SubscriptionId "$env:SUBSCRIPTION_ID" -TenantId "$env:TENANT_ID" -Credential $credential
 
-          set-AzContext -Subscription "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -Tenant "c986e767-07af-4c9c-b2a1-08446a3c3e71"
+          set-AzContext -Subscription "$env:SUBSCRIPTION_ID" -Tenant "$env:TENANT_ID"
           
           $vmstatus = Get-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM" -Status
           
