@@ -30,6 +30,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+        arguments: 
+          Install-module -Name Az.compute
+          Install-module -Name Az.Accounts
           Import-Module -Name Az.compute
           Import-Module -Name Az.Accounts
           Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
