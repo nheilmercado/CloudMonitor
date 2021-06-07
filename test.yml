@@ -30,7 +30,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Import-Module -Name Az -Global
+          Import-Module -Name Az.compute
+          Import-Module -Name Az.Accounts
           Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
           Clear-AzContext -Scope Process
 
