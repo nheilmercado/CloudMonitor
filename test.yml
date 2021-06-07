@@ -30,6 +30,10 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          Import-Module -Name C:\Modules\az_5.7.0\Az.Accounts\2.3.0\Az.Accounts.psd1 -Global
+          Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+          Clear-AzContext -Scope Process
+
           $clientsec =  ConvertTo-SecureString -String ".k_wJonJ~qXh4DO7~rwi7ETeh1F3Fu~8zn" -AsPlainText -Force
           
           $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3f58cbe3-2f62-4548-b72a-914f14e54f98", $clientsec
