@@ -30,7 +30,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Import-Module -Name C:\Modules\az_5.7.0\Az.Accounts\2.3.0\Az.Accounts.psd1 -Global
+          Import-Module -Name Az -Global
           Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
           Clear-AzContext -Scope Process
 
