@@ -31,6 +31,12 @@ stages:
         azureSubscription: '${{ parameters.ServiceConn }}'
         ScriptType: 'InlineScript'
         Inline: |
+          $clientsec =  ConvertTo-SecureString -String ".k_wJonJ~qXh4DO7~rwi7ETeh1F3Fu~8zn" -AsPlainText -Force
+
+          $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3f58cbe3-2f62-4548-b72a-914f14e54f98", $clientsec
+
+          Connect-AzAccount -ServicePrincipal -SubscriptionId "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -TenantId "c986e767-07af-4c9c-b2a1-08446a3c3e71" -Credential $credential
+
           set-AzContext -Subscription "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -Tenant "c986e767-07af-4c9c-b2a1-08446a3c3e71"
           
           $vmstatus = Get-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM" -Status
