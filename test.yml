@@ -25,23 +25,22 @@ stages:
       vmImage: 'windows-latest'
   jobs:
   - job:
-    displayName: 'Checking Job to start VM'
     - task: AzurePowerShell@5
       inputs:
         azureSubscription: '${{ parameters.ServiceConn }}'
-        ScriptType: 'InlineScript'       
+        ScriptType: 'InlineScript'
         Inline: |
-            set-AzContext -Subscription "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -Tenant "c986e767-07af-4c9c-b2a1-08446a3c3e71"
-
-            $vmstatus = Get-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM" -Status
-
-            if ($vmstatus.Statuses[1].Code -eq "PowerState/running")
-            {
-            Write-Host "Running"
-            }
-            else
-            {
-            Write-Host "Currently Stopped"
-            Start-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM"
-            }
+          set-AzContext -Subscription "0b99ca5c-439a-4841-9e1b-bc078bc5d07a" -Tenant "c986e767-07af-4c9c-b2a1-08446a3c3e71"
+          
+          $vmstatus = Get-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM" -Status
+          
+          if ($vmstatus.Statuses[1].Code -eq "PowerState/running")
+          {
+          Write-Host "Running"
+          }
+          else
+          {
+          Write-Host "Currently Stopped"
+          Start-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM"
+          }
         azurePowerShellVersion: 'LatestVersion'
