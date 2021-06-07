@@ -31,8 +31,8 @@ stages:
         targetType: 'inline'
         script: |
         arguments: 
-          Install-module -Name Az.compute
-          Install-module -Name Az.Accounts
+          Install-module -Name Az.compute -Force
+          Install-module -Name Az.Accounts -Force
           Import-Module -Name Az.compute
           Import-Module -Name Az.Accounts
           Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
