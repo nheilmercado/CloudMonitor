@@ -13,11 +13,7 @@ parameters:
 - name: groupvariables
   type: object
   default:
-   - CloudMonitorDDProd
-   - CloudMonitorSentis
-   - CloudMonitorBandA   
-   - CloudMonitorTranportNP
-   - CloudMonitorTranportProd
+   - CloudMonitorPotentialx
 
 
 stages:
