@@ -5,7 +5,7 @@ parameters:
 - name: ServiceConn
   displayName: ServiceConn
   type: string
-  default: PROD-Connection2
+  default: PROD-Connection2-Potentialx
 - name: PowerBiServiceConn
   displayName: PowerBiServiceConn
   type: string
