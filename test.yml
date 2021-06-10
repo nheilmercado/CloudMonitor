@@ -18,45 +18,11 @@ parameters:
 
 stages:
 
-- stage: 'StartVM'
-  displayName: 'ChecktostartVM'
-  pool:
-      vmImage: 'windows-latest'
-  jobs:
-  - job:
-    variables:
-    - group: DD Build Variables
-    steps:
-    - task: AzurePowerShell@5
-      inputs:
-        azureSubscription: '${{ parameters.ServiceConn }}'
-        ScriptType: 'InlineScript'
-        Inline: |
-          $clientsec =  ConvertTo-SecureString -String "$env:CLIENT_SECRET" -AsPlainText -Force
-
-          $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$env:CLIENT_ID", $clientsec
-
-          Connect-AzAccount -ServicePrincipal -SubscriptionId "$env:SUBSCRIPTION_ID" -TenantId "$env:TENANT_ID" -Credential $credential
-
-          set-AzContext -Subscription "$env:SUBSCRIPTION_ID" -Tenant "$env:TENANT_ID"
-          
-          $vmstatus = Get-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM" -Status
-          
-          if ($vmstatus.Statuses[1].Code -eq "PowerState/running")
-          {
-          Write-Host "Running"
-          }
-          else
-          {
-          Write-Host "Currently Stopped"
-          Start-AzVM -ResourceGroupName "DevOps-Build-Agents" -Name "DevOpsBuildAgentProdWindowsPoolVM"
-          }
-        azurePowerShellVersion: 'LatestVersion'
 
 - stage: 'DeployDB'
   displayName: 'PowerBi Deployment'
   pool:
-    name: DevOpsBuildAgentProdWindowsPool
+      vmImage: 'windows-latest'
   jobs:
   - ${{ each group in parameters.groupvariables }}:
       - job:
