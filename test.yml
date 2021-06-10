@@ -18,11 +18,10 @@ parameters:
 
 stages:
 
-
 - stage: 'DeployDB'
   displayName: 'PowerBi Deployment'
   pool:
-      vmImage: 'windows-latest'
+    name: DevOpsBuildAgentProdWindowsPool
   jobs:
   - ${{ each group in parameters.groupvariables }}:
       - job:
