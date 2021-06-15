@@ -5,7 +5,7 @@ parameters:
 - name: ServiceConn
   displayName: ServiceConn
   type: string
-  default: PROD-Connection2
+  default: PROD-connection-dd
 - name: PowerBiServiceConn
   displayName: PowerBiServiceConn
   type: string
@@ -18,6 +18,7 @@ parameters:
    - CloudMonitorBandA   
    - CloudMonitorTranportNP
    - CloudMonitorTranportProd
+   - CloudMonitorPotentialx
 
 
 stages:
@@ -74,6 +75,7 @@ stages:
                 azureSubscription: '${{ parameters.ServiceConn }}'
                 ScriptType: 'InlineScript'
                 Inline: |
+                  set-AzContext -Subscription "$env:ARMSUBSCRIPTIONID" -Tenant "c986e767-07af-4c9c-b2a1-08446a3c3e71"
                   $Context = Get-AzContext    
                   Set-AzKeyVaultAccessPolicy -VaultName $(resourceGroupLowerCase)-KV -ServicePrincipalName $Context.Account.Id -PermissionsToSecrets Get,List,Set
                 azurePowerShellVersion: 'LatestVersion'
