@@ -15,10 +15,7 @@ parameters:
   default:
    - CloudMonitorPotentialx
    - CloudMonitorDDProd
-   - CloudMonitorSentis
-   - CloudMonitorBandA   
-   - CloudMonitorTranportNP
-   - CloudMonitorTranportProd
+   - CloudMonitorDDev
 
 
 stages:
