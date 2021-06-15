@@ -5,7 +5,7 @@ parameters:
 - name: ServiceConn
   displayName: ServiceConn
   type: string
-  default: PROD-Connection2-Potentialx
+  default: PROD-connection-dd
 - name: PowerBiServiceConn
   displayName: PowerBiServiceConn
   type: string
@@ -14,6 +14,11 @@ parameters:
   type: object
   default:
    - CloudMonitorPotentialx
+   - CloudMonitorDDProd
+   - CloudMonitorSentis
+   - CloudMonitorBandA   
+   - CloudMonitorTranportNP
+   - CloudMonitorTranportProd
 
 
 stages:
